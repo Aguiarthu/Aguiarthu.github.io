@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Nossa Música 💚</title>
+<title>Mirrors 💚</title>
 <style>
 body {
   background-color: #121212;
@@ -28,11 +28,26 @@ img {
   border-radius: 10px;
 }
 
-h2 {
-  margin: 15px 0 5px;
+.progress-container {
+  width: 100%;
+  height: 5px;
+  background: #333;
+  border-radius: 5px;
+  margin: 15px 0;
+  cursor: pointer;
 }
 
-p {
+.progress {
+  height: 5px;
+  background: #1DB954;
+  width: 0%;
+  border-radius: 5px;
+}
+
+.time {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
   color: #b3b3b3;
 }
 
@@ -44,11 +59,7 @@ button {
   color: white;
   font-size: 16px;
   cursor: pointer;
-  margin-top: 15px;
-}
-
-button:hover {
-  background: #1ed760;
+  margin-top: 10px;
 }
 </style>
 </head>
@@ -56,15 +67,52 @@ button:hover {
 <body>
 
 <div class="card">
-  <img src="https://via.placeholder.com/300" alt="Capa">
-  <h2>Nosso Amor</h2>
-  <p>Por: O Cara Mais Sortudo do Mundo 💚</p>
-  <button onclick="mostrarMensagem()">▶ PLAY</button>
+  <img src="foto.jpg" alt="Nossa foto">
+  <h2>Mirrors</h2>
+  <p>Justin Timberlake 💚</p>
+
+  <div class="progress-container" onclick="setProgress(event)">
+    <div class="progress" id="progress"></div>
+  </div>
+
+  <div class="time">
+    <span id="currentTime">0:00</span>
+    <span>5:10</span>
+  </div>
+
+  <button onclick="togglePlay()">▶ PLAY</button>
+
+  <audio id="audio" src="mirrors.mp3"></audio>
 </div>
 
 <script>
-function mostrarMensagem() {
-  alert("Você é a melhor coisa que já aconteceu na minha vida ❤️");
+const audio = document.getElementById("audio");
+const progress = document.getElementById("progress");
+const currentTimeEl = document.getElementById("currentTime");
+
+function togglePlay() {
+  if (audio.paused) {
+    audio.play();
+  } else {
+    audio.pause();
+  }
+}
+
+audio.addEventListener("timeupdate", () => {
+  const percent = (audio.currentTime / audio.duration) * 100;
+  progress.style.width = percent + "%";
+
+  let minutes = Math.floor(audio.currentTime / 60);
+  let seconds = Math.floor(audio.currentTime % 60);
+  if (seconds < 10) seconds = "0" + seconds;
+  currentTimeEl.textContent = minutes + ":" + seconds;
+});
+
+function setProgress(e) {
+  const width = e.currentTarget.clientWidth;
+  const clickX = e.offsetX;
+  const duration = audio.duration;
+  audio.currentTime = (clickX / width) * duration;
 }
 </script>
 
